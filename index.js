@@ -23,11 +23,21 @@ function logger(req, res, next){
     next();
 }
 
-app.use(express.json()); //Para que express entienda los json
-//app.use(logger);
-app.use(morgan('dev'));
+//Settings
+app.set('appName','Fazt express tutorial');
+app.set('port',3000);
+app.set('view engine', 'ejs');
 
-//PAra ruta especifica
+//Middlewares
+app.use(express.json()); //Para que express entienda los json
+app.use(morgan('dev')); //app.use(logger);
+
+//Routes
+app.get('/', (req, res) => {
+    const data = [{name:'jhon'},{name:'jhoe'},{name:'cameron'}];
+    res.render('index.ejs', {people: data});
+});
+
 app.all('/user', (req, res, next) =>{
     console.log("Por aqui paso");
     next();
@@ -57,6 +67,7 @@ app.put('/user/:id', (req, res) => {
 
 app.use(express.static("public"));
 
-app.listen(3000, () => {
-    console.log('server con port 3000')
+app.listen(app.get('port'), () => {
+    console.log(app.get('appName'));
+    console.log('Server on port',app.get('port'));
 });
